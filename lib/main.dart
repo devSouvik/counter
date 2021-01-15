@@ -6,42 +6,87 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  List<DynamicWidget> ListDynamic = [];
+
+  addDynamic() {
+    ListDynamic.add(new DynamicWidget());
+    print(" add button pressed ");
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Counter',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         brightness: Brightness.dark,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Counter'),
+      home: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.arrow_back,
+              ),
+            ),
+            actions: [
+              Container(
+                padding: EdgeInsets.only(right: 20.0),
+                child: IconButton(icon: Icon(Icons.add), onPressed: addDynamic),
+              ),
+            ],
+            title: Center(
+              child: Text(
+                'Multi Counter',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+          //body will be here
+          body: new Container(
+            child: Column(
+              children: [
+                new Flexible(
+                  child: new ListView.builder(
+                      itemCount: ListDynamic.length,
+                      itemBuilder: (_, index) => ListDynamic[index]),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+class DynamicWidget extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _DynamicWidgetState createState() => _DynamicWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
+class _DynamicWidgetState extends State<DynamicWidget> {
   int counter = 0;
 
-  void _incrementCounter() {
+  void incrementCounter() {
     setState(() {
       counter++;
     });
   }
 
-  void _decrementCounter() {
+  void decrementCounter() {
     setState(() {
       counter--;
     });
@@ -49,63 +94,47 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: null,
-            iconSize: 30.0,
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Card(
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  
+                  Text(
+                    'Your Text here : ',
+                  ),
+                  Text(
+                    '$counter',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove_circle_rounded),
+                        onPressed: decrementCounter,
+                        iconSize: 40,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add_circle_rounded),
+                        onPressed: incrementCounter,
+                        iconSize: 40,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-
-            Card(
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Your Text here : ',
-                    ),
-                    Text(
-                      '$counter',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.remove_circle_rounded),
-                          onPressed: _decrementCounter,
-                          iconSize: 40,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.add_circle_rounded),
-                          onPressed: _incrementCounter,
-                          iconSize: 40,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-
-          ],
-        ),
-      ),
     );
   }
-
 }
